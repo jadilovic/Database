@@ -10,12 +10,14 @@
 <p>Welcome to Login Page</p>
 
 <form action="/Database/Servlet" method="post">
-<input type="hidden" name="action" value="logedin" />
+<input type="hidden" name="action" value="dologin" />
 <p>Enter your email</p>
 <input type="text" name="email" value="" /><br/>
 <p>Enter password</p>
 <input type="text" name="password" value="" /><br/>
 <input type="submit" value="OK" />
 </form>
+
+<%= request.getAttribute("message") %>
 </body>
 </html>

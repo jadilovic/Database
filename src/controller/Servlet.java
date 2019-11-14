@@ -63,9 +63,8 @@ public class Servlet extends HttpServlet {
 		} else {
 			page = "/login.jsp";
 		}
-		
+		request.setAttribute("message", "");
 		request.getRequestDispatcher(page).forward(request, response);
-		
 	}
 
 	/**
@@ -100,20 +99,22 @@ public class Servlet extends HttpServlet {
 			
 			request.setAttribute("email", email);
 			request.setAttribute("password", "");
+			request.setAttribute("message", "");
 			
 			Account account = new Account(conn);
 			
-			if(account.login(email, password)){
-				request.getRequestDispatcher("/loginsuccess.jsp").forward(request, response);
-			} else {
-				request.setAttribute("message", "email address or password not recognized");
-				request.getRequestDispatcher("/login.jsp").forward(request, response);
+			try {
+				if(account.login(email, password)){
+					request.getRequestDispatcher("/loginsuccess.jsp").forward(request, response);
+				} else {
+					request.setAttribute("message", "email address or password not recognized");
+					request.getRequestDispatcher("/login.jsp").forward(request, response);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			
-			out.println("<html>");
-			out.println("<p> Email is: " + email + "</p>");
-			out.println("<p> Password is: " + password + "</p>");
-			out.println("</html>");
 		} else {
 			out.println("unrecognized action");
 			request.getRequestDispatcher("/login.jsp").forward(request, response);

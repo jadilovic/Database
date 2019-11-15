@@ -8,5 +8,18 @@
 </head>
 <body>
 <h3>Welcome to Create User Page</h3>
+
+<%= request.getAttribute("message") %>
+
+<form action="/Database/PageServlet" method="post" >
+<input type="hidden" name="action" value="docreate" />
+<p>Enter your email: </p>
+<input type="text" name="email" value="enter email" />
+<p>Enter password</p>
+<input type="text" name="password" value="enter password" />
+<p>Confirm password</p>
+<input type="text" name="passwordConfirm" value="confirm password" />
+<input type="submit" value="OK" /><br/>
+</form>
 </body>
 </html>

@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 
+import beans.User;
 import database.Person;
 
 /**
@@ -69,22 +70,21 @@ public class PageServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter out = response.getWriter();
 		String action = request.getParameter("action");
+		String email = request.getParameter("email");
+		String password = request.getParameter("password");
+		String confirmPassword = request.getParameter("passwordConfirm");
 		
+		Connection conn = null;
+		try {
+			conn = ds.getConnection();
+		} catch (SQLException e) {
+			out.println("No connection established");
+			e.printStackTrace();
+		}
 		
-		if(action.equals("dologin")){
-			String email = request.getParameter("email");
-			String password = request.getParameter("password");
-			
-			Connection conn = null;
-			try {
-				conn = ds.getConnection();
-			} catch (SQLException e) {
-				out.println("No connection established");
-				e.printStackTrace();
-			}
-			
-			Person person = new Person(conn);
-			
+		Person person = new Person(conn);
+		
+		if(action.equals("dologin")){	
 			try {
 				if(person.login(email, password)){
 					request.setAttribute("email", email);
@@ -96,6 +96,40 @@ public class PageServlet extends HttpServlet {
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			}
+		}
+		
+		if(action.equals("docreate")){
+			if(!password.equals(confirmPassword)){
+				request.setAttribute("message", "Entered confirm password does not mathch with "
+						+ " the password. \nPlease try again.");
+				request.getRequestDispatcher("/pageCreate.jsp").forward(request, response);
+			}	
+			
+			try {
+				if(person.emailExists(email)){
+					request.setAttribute("message", "Entered email already exists. Please try again.");
+					request.getRequestDispatcher("/pageCreate.jsp").forward(request, response);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			User user = new User(email, password);
+			
+			if(user.validate()){
+				try {
+					person.createUser(email, password);
+					request.setAttribute("email", email);
+					request.getRequestDispatcher("/pageNewUserCreated.jsp").forward(request, response);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} else {
+				request.setAttribute("message", user.getMessage());
+				request.getRequestDispatcher("/pageCreate.jsp").forward(request, response);
 			}
 		}
 	}

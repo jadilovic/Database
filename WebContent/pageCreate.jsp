@@ -4,11 +4,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Index Page</title>
+<title>Create User Page</title>
 </head>
 <body>
-<h3>Welcome to Index Page</h3>
-<a href="/Database/PageServlet?action=login">Click here to got to Login Page</a>
-<a href="/Database/PageServlet?action=create">Click here to create User</a>
+<h3>Welcome to Create User Page</h3>
 </body>
 </html>

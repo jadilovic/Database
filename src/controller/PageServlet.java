@@ -51,8 +51,16 @@ public class PageServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String action = request.getParameter("action");
 		request.setAttribute("message", "");
-		request.getRequestDispatcher("/pageLogin.jsp").forward(request, response);
+		
+		if(action == null) {
+			request.getRequestDispatcher("/pageIndex.jsp").forward(request, response);
+		} else if(action.equals("login")){
+			request.getRequestDispatcher("/pageLogin.jsp").forward(request, response);
+		} else if(action.equals("create")){
+			request.getRequestDispatcher("/pageCreate.jsp").forward(request, response);
+		}
 	}
 
 	/**
